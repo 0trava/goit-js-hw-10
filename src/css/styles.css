@@ -12,9 +12,157 @@ body {
   line-height: 1.5;
 }
 
-#search-box {
+
+
+.container{
+  display: flex;
+  justify-content: center;
+
+  min-width: 380px;
+  padding-left: 15px;
+  padding-right: 15px;
+  margin: 0 auto;
+  /* outline: 1px solid red; */
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
+
+body {
+  background: url(../images/map_for_background_2.jpg) no-repeat center center fixed;
+  background-size: cover;
+  font: 14px/20px "Lato", Arial, sans-serif;
+  margin-top: 30px;
+
+}
+
+/* -------------------------------Инпут---------------------------------- */
+/* #search-box {
   font: inherit;
   padding: 8px;
   max-width: 320px;
   margin-bottom: 16px;
+} */
+
+.inputbox {
+  position: relative;
+  width: 196px;
+  margin-top: 20px;
 }
+
+.inputbox input {
+  position: relative;
+  width: 100%;
+  padding: 20px 10px 10px;
+  background: transparent;
+  outline: none;
+  box-shadow: none;
+  border: none;
+  color: #010102;
+  font-size: 1em;
+  letter-spacing: 0.05em;
+  transition: 0.5s;
+  z-index: 10;
+}
+
+.inputbox span {
+  position: absolute;
+  left: 0;
+  padding: 20px 10px 10px;
+  font-size: 1em;
+  color: #ffffff;
+  letter-spacing: 00.05em;
+  transition: 0.5s;
+  pointer-events: none;
+}
+
+.inputbox input:valid ~span,
+.inputbox input:focus ~span {
+  color: #e9f1f8;
+  transform: translateX(-10px) translateY(-34px);
+  font-size: 0,75em;
+  margin-top: -10px;
+}
+
+.inputbox i {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 2px;
+  background: #d8d9ebb7;
+  border-radius: 4px;
+  transition: 0.5s;
+  pointer-events: none;
+  z-index: 9;
+}
+
+.inputbox input:valid ~i,
+.inputbox input:focus ~i {
+  height: 44px;
+}
+
+
+/* Style for Country BOX */
+
+.country-info{
+  display: flex;
+  justify-content: flex-start;
+  min-width: 300px;
+  margin-top: 40px;
+  background-color: #e9f1f8a2;
+}
+
+.country-box-list{
+  list-style: none;
+  padding-left: 10px;
+ 
+}
+
+.country-box-list li{
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 19px;
+  letter-spacing: 0.03em;
+  color: #212121;
+}
+
+.country-box-name{
+  margin: 0;
+  text-align: center;
+}
+
+.coutry-box-span{
+  font-weight: 700;
+  margin-right: 5px;
+}
+
+.country-box-top{
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+/* Стилі для списку пошуку */
+
+.country-list{
+  padding-left: 0px;
+  list-style: none;
+
+}
+
+
+
+.country-list img{
+  width: 40px;
+}
+
+.country-list li{
+  font-weight: 700;
+  font-size: 12px;
+
+  background-color: #e9f1f863;
+  padding: 10px;
+}
+
+
