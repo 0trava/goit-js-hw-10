@@ -2,17 +2,6 @@
   box-sizing: border-box;
 }
 
-body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
-    Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  background-color: #fafafa;
-  color: #212121;
-  line-height: 1.5;
-}
-
-
 
 .container{
   display: flex;
@@ -28,6 +17,7 @@ body {
 }
 
 body {
+  background-color: #010102;
   background: url(../images/map_for_background_2.jpg) no-repeat center center fixed;
   background-size: cover;
   font: 14px/20px "Lato", Arial, sans-serif;
@@ -45,8 +35,15 @@ body {
 
 .inputbox {
   position: relative;
-  width: 196px;
+  width: 400px;
   margin-top: 20px;
+  justify-content: center;
+  
+}
+
+.content-box{
+  justify-content: center;
+
 }
 
 .inputbox input {
@@ -115,6 +112,7 @@ body {
 .country-box-list{
   list-style: none;
   padding-left: 10px;
+  padding-right: 10px;
  
 }
 

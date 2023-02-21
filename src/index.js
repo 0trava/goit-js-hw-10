@@ -4,7 +4,10 @@
 
 
 import './css/styles.css';
-import Notiflix from 'notiflix';
+import Notiflix from 'notiflix'; // для сповіщень
+import debounce from 'lodash.debounce'; // для затримки запиту
+
+const DEBOUNCE_DELAY = 300;
 
 // Підключаємось до данних сторінки index.html
 const refs = {
@@ -17,72 +20,85 @@ console.log(refs.formInput); // TEST
 console.log(refs.searchList); // TEST
 console.log(refs.cardWindow); // TEST
 
-const DEBOUNCE_DELAY = 300;
-let listPut = ""
+// -------------------------------------------------------------
+
 
 // Відслідковуваємо подію input
-refs.formInput.addEventListener('input', onSearch);
+refs.formInput.addEventListener('input', debounce(onSearch, DEBOUNCE_DELAY)); // затримка для запиту
 
+
+//   ФУНКЦІЯ: Аналіз введенного значення в input
 function onSearch(e) {
     e.preventDefault();
 
-    const searchQuery = e.target.value;
-    console.log(`searchQuery: ${searchQuery}`); // TEST
-    let inputSearch = fetch(`https://restcountries.com/v3.1/name/${searchQuery}`).then(response => {
-        return response.json();
-    })
+    const searchQuery = e.target.value.trim(); // Отримуэмо значення з input
 
-    console.log(inputSearch); // TEST
-    console.log(2); // TEST
-    console.log(inputSearch.Array); // TEST
+    if (searchQuery !== '') {
+    // СТВОРЕННЯ Промісу на отримання данних з сайту https://restcountries.com/v3.1/
 
-    
-    inputSearch.forEach(element => {
-        let put = 
-        `<li class="country-box-item country-box-top "> 
-        <img class="Country-flag" src="${element[i].flags.svg}" alt="" width="70px">
-        <h2 class="country-box-name">${element[i].name.official}</h2>
-        </li>`;
+    fetchList(searchQuery)
+    .then(chackList)
+    .catch(onFetchError)
+    }
+    //   ФУНКЦІЯ: Проміс 1/2 - отримаємо список країн з сайту
+    function fetchList(countyID){
 
-        listPut += put;
-        console.log(listPut);
-    }); 
-
-    refs.searchList.innerHTML = listPut;
-
-}
+        return fetch(`https://restcountries.com/v3.1/name/${countyID}`)
+        .then(response => {return response.json(); })
+        .catch(onListError)
 
 
-// ----------------------------------------------- 
-// Звертаємось на сервер для завантаження данних карточки покемона
+    };
 
-let card = fetch(`https://restcountries.com/v3.1/all`).then(response => {
-            return response.json();
-        })
+    //   ФУНКЦІЯ: Проміс 2/2 - оброблюємо отриманний список країн
+    function chackList (countyID){
+        let textList ="";
 
-console.log(card); // TEST
+        if (countyID.length > 10) {
+            Notiflix.Notify.failure('Too many matches found. Please enter a more specific name.',{width:'350px', borderRadius: '10px', position: 'center-center',clickToClose: true, useIcon: false,});
 
+            // якщо знайдено 0 країн - виводимо сповіщення
+          } else if (countyID.length === 0) {
+            console.log(`SOSS`)
+            Notiflix.Notify.failure('Oops, there is no country with that name',{width:'350px', borderRadius: '10px', position: 'center-center',clickToClose: true, useIcon: false,});
+            
+            //Очищюємо сторінку 
+            refs.cardWindow.innerHTML = "";//   CARD - чистимо
+            refs.searchList.innerHTML = "";//   LIST - чистимо
+            // якщо знайдено >= 2 країн і <= 10 виводимо на сторінку дані
+          } else if (countyID.length >= 2 && countyID.length <= 10) {
+            refs.cardWindow.innerHTML = "";//   CARD - чистимо
+            renderCountryList(countyID); // вивід списку-країн на сторінку
+  
+            // якщо знайдена 1 країна - виводимо на сторінку 1 країну
+          } else if (countyID.length === 1) {
+            refs.searchList.innerHTML = "";//   LIST - чистимо
+            renderOneCountry(countyID); // вивід 1 країни на сторінку
+          } else {
+            refs.cardWindow.innerHTML = "";//   CARD - чистимо
+            refs.searchList.innerHTML = "";//   LIST - чистимо
+            Notiflix.Notify.failure('Oops, there is no country with that name',{width:'350px', borderRadius: '10px', position: 'center-center',clickToClose: true, useIcon: false,});
+          }
 
-// !!!!!!!!!!!!!!!!!!!!! FOUND ID
-const searchQuery = "japan";
+        //   ФУНКЦІЯ: виводу на екран списку країн
+          function renderCountryList(ID){
+            for (let i=0; i<ID.length; i += 1){
+                let markup = 
+                `<li class="country-box-item country-box-top "> 
+                <img class="Country-flag" src="${ID[i].flags.svg}" alt="" width="70px">
+                <h2 class="country-box-name">${ID[i].name.official}</h2>
+                </li>`;
+                textList += markup;   
+            };
+            refs.searchList.innerHTML = textList;//   LIST - Виводимо згрупованний список на екран
+        };};
 
-
-fetchCard(searchQuery)
-.then(renderCountreCard)
-.catch(onFetchError)
-
-
-
-function fetchCard(countyID){
-    return fetch(`https://restcountries.com/v3.1/name/${countyID}`)
-    .then(response => {
-        return response.json();
-    })
 };
 
 
 
-function renderCountreCard (countyID){
+//   ФУНКЦІЯ: виводу на екран ОДНА Картка Країни
+function renderOneCountry (countyID){
     console.log(countyID);
     
     const markup = 
@@ -96,9 +112,19 @@ function renderCountreCard (countyID){
             <li class="country-box-item"> <p><span class="coutry-box-span">Languages:</span> ${countyID[0].languages.jpn} </p></li>
         </ul>`;
 
-    refs.cardWindow.innerHTML = markup;
+    refs.cardWindow.innerHTML = markup;//   CARD - - Виводимо на екран
 };
 
+
+//   ФУНКЦІЯ: Зловили помилку
 function onFetchError (error){
+    refs.cardWindow.innerHTML = "";//   CARD - чистимо
+    refs.searchList.innerHTML = "";//   LIST - чистимо
     Notiflix.Notify.failure('Oops, there is no country with that name',{width:'350px', borderRadius: '10px', position: 'center-center',clickToClose: true, useIcon: false,});// Повідомлення помилка
 };
+
+function onListError (error) {
+    refs.cardWindow.innerHTML = "";//   CARD - чистимо
+    refs.searchList.innerHTML = "";//   LIST - чистимо
+    Notiflix.Notify.failure('SOSSSS',{width:'350px', borderRadius: '10px', position: 'center-center',clickToClose: true, useIcon: false,});
+}
