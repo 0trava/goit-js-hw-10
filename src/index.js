@@ -39,6 +39,9 @@ function onSearch(e) {
     fetchList(searchQuery)
     .then(chackList)
     .catch(onFetchError)
+    } else {
+      refs.cardWindow.innerHTML = "";//   CARD - чистимо
+      refs.searchList.innerHTML = "";//   LIST - чистимо
     }
     //   ФУНКЦІЯ: Проміс 1/2 - отримаємо список країн з сайту
     function fetchList(countyID){
@@ -54,8 +57,10 @@ function onSearch(e) {
     function chackList (countyID){
         let textList ="";
 
+        
+
         if (countyID.length > 10) {
-            Notiflix.Notify.failure('Too many matches found. Please enter a more specific name.',{width:'350px', borderRadius: '10px', position: 'center-center',clickToClose: true, useIcon: false,});
+            Notiflix.Notify.info('Too many matches found. Please enter a more specific name.',{width:'350px', borderRadius: '10px', position: 'center-center',clickToClose: true, useIcon: false,});
 
             // якщо знайдено 0 країн - виводимо сповіщення
           } else if (countyID.length === 0) {
@@ -126,5 +131,5 @@ function onFetchError (error){
 function onListError (error) {
     refs.cardWindow.innerHTML = "";//   CARD - чистимо
     refs.searchList.innerHTML = "";//   LIST - чистимо
-    Notiflix.Notify.failure('SOSSSS',{width:'350px', borderRadius: '10px', position: 'center-center',clickToClose: true, useIcon: false,});
+    Notiflix.Notify.failure('Oops, there is no country with that name',{width:'350px', borderRadius: '10px', position: 'center-center',clickToClose: true, useIcon: false,});
 }
