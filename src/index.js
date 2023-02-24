@@ -7,6 +7,7 @@ import './css/styles.css';
 import Notiflix from 'notiflix'; // для сповіщень
 import debounce from 'lodash.debounce'; // для затримки запиту
 
+
 const DEBOUNCE_DELAY = 300;
 
 // Підключаємось до данних сторінки index.html
@@ -46,7 +47,7 @@ function onSearch(e) {
     //   ФУНКЦІЯ: Проміс 1/2 - отримаємо список країн з сайту
     function fetchList(countyID){
 
-        return fetch(`https://restcountries.com/v3.1/name/${countyID}`)
+        return fetch(`Access-Control-Allow-Origin: https://restcountries.com/v3.1/name/${countyID}`)
         .then(response => {return response.json(); })
         .catch(onListError)
 
@@ -114,7 +115,7 @@ function renderOneCountry (countyID){
             </li>
             <li class="country-box-item"> <p><span class="coutry-box-span">Capital:</span> ${countyID[0].capital}</p></li>
             <li class="country-box-item"> <p><span class="coutry-box-span">Population:</span>${countyID[0].population} </p></li>
-            <li class="country-box-item"> <p><span class="coutry-box-span">Languages:</span> ${countyID[0].languages.jpn} </p></li>
+            <li class="country-box-item"> <p><span class="coutry-box-span">Languages:</span> ${countyID[0].languages} </p></li>
         </ul>`;
 
     refs.cardWindow.innerHTML = markup;//   CARD - - Виводимо на екран
